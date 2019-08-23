@@ -1,4 +1,34 @@
 <?php
+include('settings.php');
+
+//use Carbon_Fields\Container;
+//use Carbon_Fields\Field;
+//
+//add_action( 'carbon_fields_register_fields', 'crb_attach_theme_options' );
+//function crb_attach_theme_options() {
+//    Container::make( 'theme_options', __( 'Theme Options' ) )
+//        ->add_fields( array(
+//            Field::make( 'text', 'crb_text', 'Text Field' ),
+//        ) );
+//}
+//
+//
+//add_action('carbon_fields_register_fields', 'crb_attach');
+//function crb_attach()
+//{
+//    include __DIR__ . '/inc/theme_options.php';
+//    include __DIR__ . '/inc/therm_meta.php';
+//    include __DIR__ . '/inc/nav_menu.php';
+//}
+//
+//add_action('after_setup_theme', 'crb_load');
+//function crb_load()
+//{
+//    require_once('vendor/autoload.php');
+//    Carbon_Fields\Carbon_Fields::boot();
+//}
+
+
 function registerStyles()
 {
 //    wp_register_style ('main_style', get_stylesheet_directory_uri() . '/src/css/main.css', array(), '1.0.0');
@@ -21,4 +51,10 @@ function enqueue_scripts()
 }
 
 add_action('wp_enqueue_scripts', 'enqueue_scripts');
+
+// register menu for header and footer
+register_nav_menus(array(
+    'header' => 'header menu',
+    'footer' => 'Footer menu'
+));
 

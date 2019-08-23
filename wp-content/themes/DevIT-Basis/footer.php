@@ -1,13 +1,12 @@
 <footer>
-    <div id="footer-menu">
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a id="course" href="#">Courses</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Video</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </div>
+    <?php
+    wp_nav_menu( array(
+        'menu' => 'footer-menu',
+        'menu_class'=>'menu',
+        'theme_location'=>'footer',
+    ) );
+    ?>
+
     <div id="middle_footer">
         <div id="left_box">
             <ul>
@@ -42,10 +41,11 @@
                 <li>
                     <a href="#">Social networks</a>
                     <ul>
-                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        <?php $options = get_option( 'theme_settings' ); ?>
+                        <li><a href="<?php echo $options['link_twitter'];?>"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="<?php echo $options['link_linkedin'];?>"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li><a href="<?php echo $options['link_facebook'];?>"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="<?php echo $options['link_instagram'];?>"><i class="fab fa-instagram"></i></a></li>
                     </ul>
                 </li>
 

@@ -34,9 +34,9 @@
 <div class="wrapper">
     <header>
         <div class="container">
+            <?php $options = get_option( 'theme_settings' ); ?>
             <a class="logo" href="#">
-
-                <img src="<?php echo get_stylesheet_directory_uri() . '/images/logoform.png';?>" alt="">
+                <img src="<?php echo get_stylesheet_directory_uri() . $options['custom_logo'];?>" alt="">
             </a>
             <input type="checkbox" id="hmt" class="hidden-menu-ticker">
             <label class="btn-menu" for="hmt">
@@ -44,30 +44,40 @@
                 <span class="second"></span>
                 <span class="third"></span>
             </label>
-            <nav class="header-menu">
-                <button id="auth" type="button" >Authorization</button>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li>
-                        <a id="course" href="#">Courses<img src="<?php echo get_stylesheet_directory_uri() . '/images/arrow_down.png';?>" alt=""></a>
-                        <ul class="sub-menu">
-                            <li><a href="#">Courses 1</a></li>
-                            <li><a href="#">Courses 2</a></li>
-                            <li><a href="#">Courses 3</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Video</a></li>
-                    <li>
-                        <a href="#">Interesting<img src="<?php echo get_stylesheet_directory_uri() . '/images/arrow_down.png';?>" alt=""></a>
-                        <ul class="sub-menu">
-                            <li><a href="#">Interesting 1</a></li>
-                            <li><a href="#">Interesting 2</a></li>
-                            <li><a href="#">Interesting 3</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
+
+            <?php
+            wp_nav_menu( array(
+                'menu' => 'header_catalog_menu',
+                'menu_class'=>'menu',
+                'theme_location'=>'header',
+            ) );
+            ?>
+
+
+<!--            <nav class="header-menu">-->
+<!--                <button id="auth" type="button" >Authorization</button>-->
+<!--                <ul>-->
+<!--                    <li><a href="#">Home</a></li>-->
+<!--                    <li>-->
+<!--                        <a id="course" href="#">Courses<img src="--><?php //echo get_stylesheet_directory_uri() . '/images/arrow_down.png';?><!--" alt=""></a>-->
+<!--                        <ul class="sub-menu">-->
+<!--                            <li><a href="#">Courses 1</a></li>-->
+<!--                            <li><a href="#">Courses 2</a></li>-->
+<!--                            <li><a href="#">Courses 3</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
+<!--                    <li><a href="#">About</a></li>-->
+<!--                    <li><a href="#">Video</a></li>-->
+<!--                    <li>-->
+<!--                        <a href="#">Interesting<img src="--><?php //echo get_stylesheet_directory_uri() . '/images/arrow_down.png';?><!--" alt=""></a>-->
+<!--                        <ul class="sub-menu">-->
+<!--                            <li><a href="#">Interesting 1</a></li>-->
+<!--                            <li><a href="#">Interesting 2</a></li>-->
+<!--                            <li><a href="#">Interesting 3</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </nav>-->
             <button id="authorization" type="button" >Authorization</button>
             <span class="x-off-canvas-bg open-close-menu"></span>
         </div>

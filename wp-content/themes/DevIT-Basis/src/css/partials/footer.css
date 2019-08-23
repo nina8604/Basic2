@@ -2,11 +2,11 @@ footer {
     width: 100%;
     background-color: #a9dff2;
 }
-#footer-menu {
+.menu-footer-container {
     width: 100%;
     border-bottom: 1px solid #fff;
 }
-#footer-menu ul {
+.menu-footer-container ul {
     width: 31%;
     max-height: 79px;
     display: flex;

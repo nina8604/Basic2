@@ -153,6 +153,18 @@ fieldset #resume_box textarea {
     min-height: 277px;
     border: 1px solid #b7b7b7;
 }
+#submit {
+    height: 39px;
+    border-radius: 2px;
+    filter: brightness(1);
+    transition: filter 0.5s ease;
+    background-color: #f6f6f6;
+    border: 1px solid #b7b7b7;
+}
+#submit:hover {
+    cursor: pointer;
+    filter: brightness(0.9);
+}
 @media screen and (min-width: 2000px) {
     #resume_box {
         margin-top: 10px;
