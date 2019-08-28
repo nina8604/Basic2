@@ -1,12 +1,16 @@
 @font-face {
     font-family: 'open_sans';
-    src: url('/nina-iaremenko-jsfw1-basis/stage5/fonts/OpenSans-Regular.ttf') format('truetype');
+    src: url('../../../fonts/OpenSans-Regular.ttf') format('truetype');
 
     font-weight: 400;
     font-style: normal;
 }
+html {
+    max-width: 1350px;
+    margin: 0 auto;
+}
 body {
-    max-width: 100%;
+    max-width: 1350px;
     color: #212b35;
     font-family: 'open_sans';
     font-size: 16px;
@@ -15,6 +19,7 @@ body {
 }
 .wrapper {
     width: 100%;
+    max-width: 1350px;
     font-family: 'open_sans';
     font-size: 16px;
     font-weight: 400;
@@ -28,6 +33,7 @@ a {
     width: 100%;
     min-height: 100px;
     background-color: #a9dff2;
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
