@@ -255,11 +255,11 @@ jQuery(document).ready(function() {
             })
             .done(function (response) {//Данные отправлены успешно
                 if (response !== '') {
-                    console.log(response);
+                    alert('Данные отправленны успешно');
                 }
             })
             .fail(function(error) { // Данные не отправлены
-                console.log(error);
+                alert(error);
             });
         }else return;
     });
