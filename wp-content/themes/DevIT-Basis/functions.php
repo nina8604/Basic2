@@ -24,8 +24,16 @@ function enqueue_scripts()
     wp_enqueue_script('jquery_ui_scripts', get_stylesheet_directory_uri() . '/src/js/jquery-ui.js', array('jquery'), '1.1.0', true);
 
 }
-
 add_action('wp_enqueue_scripts', 'enqueue_scripts');
+
+add_action( 'wp_enqueue_scripts', 'myajax_data', 99 );
+function myajax_data(){
+    wp_localize_script( 'theme_scripts', 'myajax',
+        array(
+            'url' => admin_url('admin-ajax.php')
+        )
+    );
+}
 
 // register menu for header and footer
 register_nav_menus(array(
@@ -36,7 +44,7 @@ register_nav_menus(array(
 //create function show contact form for shortcode
 function show_form (){
     $src = get_stylesheet_directory_uri() . '/images/upload.png';
-    $form = '<form class="form" action="" method="post" enctype = "multipart/form-data" data-ajax-url="' . admin_url('admin-ajax.php') . '" >
+    $form = '<form class="form" action="" method="post" enctype = "multipart/form-data" >
             <fieldset>
                 <label for="fio">ФИО </label><br>
                 <input id="fio" type="text" name="fio" value="" >
@@ -96,7 +104,7 @@ function create_custom_post_type() {
     register_post_type ('devit_contact_form', array(
         'label'  => null,
         'labels' => array(
-            'name'               => 'Devit contact forms', // основное название для типа записи
+            'name'               => 'Devit forms', // основное название для типа записи
             'singular_name'      => 'devit_contact_form', // название для одной записи этого типа
             'add_new'            => 'Add', // для добавления новой записи
             'add_new_item'       => 'Add new devit_contact_form', // заголовка у вновь создаваемой записи в админ-панели.
@@ -123,7 +131,7 @@ function create_custom_post_type() {
         //'capabilities'      => 'post', // массив дополнительных прав для этого типа записи
         //'map_meta_cap'      => null, // Ставим true чтобы включить дефолтный обработчик специальных прав
         'hierarchical'        => false,
-        'supports'            => array('title','thumbnail'), // 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
+        'supports'            => array('title', 'thumbnail'), // 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
         'register_meta_box_cb' => 'contact_user_data_boxes', // custom meta box
         'taxonomies'          => [],
         'has_archive'         => true,
@@ -136,25 +144,10 @@ add_action('add_meta_boxes','contact_user_data_boxes');
 
 // Registers individual meta boxes for custom post type
 function contact_user_data_boxes($post) {
-    add_meta_box('fio', 'Name', 'user_fio_meta', 'devit_contact_form', 'side', 'default');
-    add_meta_box('email', 'Email', 'user_email_meta', 'devit_contact_form', 'normal', 'default');
-    add_meta_box('phone', 'Phone', 'user_phone_meta', 'devit_contact_form', 'normal', 'default');
-    add_meta_box('age', 'Age', 'user_age_meta', 'devit_contact_form', 'normal', 'default');
-    add_meta_box('resume', 'Resume', 'user_resume_meta', 'devit_contact_form', 'normal', 'default');
-}
-// function edit html meta box
-function user_fio_meta() {
-    global $post;
-
-    wp_nonce_field( basename( __FILE__ ), 'devit_contact_form_fields' );
-
-    //Get the contact data if it is already written
-    $fio = get_post_meta($post->ID, 'fio', true);
-
-    //Output the field
-
-    echo '<input type = "text" name="fio" value="' .
-        $fio . '" class = "fio" ';
+    add_meta_box('email', 'Email', 'user_email_meta', 'devit_contact_form', 'normal', 'high');
+    add_meta_box('phone', 'Phones', 'user_phone_meta', 'devit_contact_form', 'normal', 'high');
+    add_meta_box('age', 'Age', 'user_age_meta', 'devit_contact_form', 'normal', 'high');
+    add_meta_box('resume', 'Resume', 'user_resume_meta', 'devit_contact_form', 'normal', 'high');
 }
 function user_email_meta() {
     global $post;
@@ -209,44 +202,12 @@ function user_resume_meta() {
 }
 
 // Action hook to save the post meta data
-add_action('save_post', 'save_contact_user_fio_meta', 1, 2);
 add_action('save_post', 'save_contact_user_email_meta', 1, 3);
-add_action('save_post', 'save_contact_user_phone_meta', 1, 4);
-add_action('save_post', 'save_contact_user_age_meta', 1, 5);
-add_action('save_post', 'save_contact_user_resume_meta', 1, 6);
+add_action('save_post', 'save_contact_user_phone_meta', 1, 5);
+add_action('save_post', 'save_contact_user_age_meta', 1, 7);
+add_action('save_post', 'save_contact_user_resume_meta', 1, 9);
 
-function save_contact_user_fio_meta($post_id, $post) {
 
-    //Check if the current user can edit the post
-    if (!current_user_can('edit_post', $post->ID)) {
-        return $post_id;
-    }
-
-    // Verify this came from the our screen and with proper authorization,
-    // because save_post can be triggered at other times.
-    if ( ! isset( $_POST['fio'] ) || ! wp_verify_nonce( $_POST['devit_contact_form_fields'], basename(__FILE__) ) ) {
-        return $post_id;
-    }
-
-    //Add values to custom fields
-    $devit_contact_form_meta['fio'] = $_POST['fio'];
-
-    //Add values to custom fields
-    foreach ($devit_contact_form_meta as $key => $value) {
-        if ($post->post_type == "revision")
-            return;
-        $value = implode(',', (array) $value);
-
-        if (get_post_meta($post->ID, $key, FALSE)) {
-            update_post_meta($post->ID, $key, $value);
-        } else {
-            add_post_meta($post->ID, $key, $value);
-        }
-        if (!$value) {
-            delete_post_meta($post->ID, $key);
-        }
-    }
-}
 function save_contact_user_email_meta($post_id, $post) {
 
     //Check if the current user can edit the post
@@ -377,20 +338,11 @@ function save_contact_user_resume_meta($post_id, $post) {
 }
 
 
-
-// add link on admin-ajax.php
-add_action('wp_head', 'myplugin_ajaxurl');
-function myplugin_ajaxurl() {
-    echo '<script type="text/javascript">
-var ajaxurl = "' . admin_url('admin-ajax.php') . '";
-</script>';
-}
-
 // save posts if it is ajax
-//if (wp_doing_ajax()) {
+if (wp_doing_ajax()) {
     add_action('wp_ajax_save_custom_post', 'save_devit_post_type');
     add_action('wp_ajax_nopriv_save_custom_post', 'save_devit_post_type');
-//}
+}
 
 function save_devit_post_type() {
 
@@ -422,11 +374,12 @@ function save_devit_post_type() {
         'post_type' => 'devit_contact_form',
         'post_status' => 'private',
         'meta_input' => array(
-            'fio' => $_POST['fio'],
+//            'fio' => $_POST['fio'],
+            'excerpt' => $_POST['resume'],
             'email' => $_POST['email'],
             'phone' => implode(', ', $_POST['phone']),
             'age' => $_POST['age'],
-            'resume' => $_POST['resume'],
+//            'resume' => $_POST['resume'],
             ),
     );
 

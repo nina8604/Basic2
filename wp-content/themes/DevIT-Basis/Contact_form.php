@@ -21,7 +21,7 @@ function contact_form_menu_page(){
                   <ol>
                         <li>ФИО: '.get_post_meta($post_id, 'fio', true).'</li>
                         <li>Email: '.get_post_meta($post_id, 'email', true).'</li>
-                        <li>Телефон: '.get_post_meta($post_id, 'phone', true).'</li>
+                        <li>Телефоны: '.get_post_meta($post_id, 'phone', true).'</li>
                         <li>Возраст: '.get_post_meta($post_id, 'age', true).'</li>
                         <li>Фотография: <img src="'.get_the_post_thumbnail_url($post_id).'" width="200"></li>
                         <li>Резюме: '.get_post_meta($post_id, 'resume', true).'</li>

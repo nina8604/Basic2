@@ -1,9 +1,8 @@
 .main {
     width: 100%;
-    /*height: 1150px;*/
-    /*background-image: url("/nina-iaremenko-jsfw1-basis/stage5/images/main.png");*/
     background-repeat: no-repeat;
     background-size: cover;
+    background-position-y: bottom;
     box-sizing: border-box;
     min-height: 100%;
     padding-bottom: 350px;
@@ -12,9 +11,6 @@ form {
     margin: 0 auto;
     max-width: 536px;
     padding: 53px 40px 60px;
-    /*padding-top: 53px;*/
-    /*padding-left: 40px;*/
-    /*padding-right: 40px;*/
 }
 form fieldset {
     padding: 26px 28px 0 30px;

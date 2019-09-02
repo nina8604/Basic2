@@ -211,7 +211,7 @@ jQuery(document).ready(function() {
             fd.append('action','save_custom_post');
             console.log(fd);
             jQuery.ajax( {
-                url: ajaxurl,
+                url: myajax.url,
                 type:     "POST",
                 processData: false,
                 cache: false,
