@@ -5,12 +5,15 @@
     font-weight: 400;
     font-style: normal;
 }
+html,
+body,
+.wrapper {
+    height: 100%;
+}
 html {
-    max-width: 1350px;
     margin: 0 auto;
 }
 body {
-    max-width: 1350px;
     color: #212b35;
     font-family: 'open_sans';
     font-size: 16px;
@@ -19,7 +22,8 @@ body {
 }
 .wrapper {
     width: 100%;
-    max-width: 1350px;
+    position: relative;
+    min-height: 100%;
     font-family: 'open_sans';
     font-size: 16px;
     font-weight: 400;
@@ -28,11 +32,15 @@ a {
     color: #212b35;
     text-decoration: none;
 }
+header {
+    background-color: #a9dff2;
+}
 
 .container {
     width: 100%;
+    max-width: 1350px;
     min-height: 100px;
-    background-color: #a9dff2;
+    margin: 0 auto;
     position: relative;
     display: flex;
     flex-direction: row;

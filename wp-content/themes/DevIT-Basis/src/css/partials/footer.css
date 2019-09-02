@@ -1,6 +1,13 @@
 footer {
     width: 100%;
     background-color: #a9dff2;
+    height: 340px;
+    margin-top: -340px;
+}
+.footer-container {
+    width: 100%;
+    max-width: 1350px;
+    margin: 0 auto;
 }
 .menu-footer-container {
     width: 100%;
@@ -17,7 +24,7 @@ footer {
     letter-spacing: 0;
     font-size: 17px;
     margin-top: -2px;
-    margin-left: 48px;
+    margin-left: 110px;
     margin-bottom: 26px;
 }
 #middle_footer {
@@ -125,9 +132,9 @@ footer {
     #center_box {
         width: 33%;
     }
-    #right_box {
-        width: 25%;
-    }
+    /*#right_box {*/
+    /*    width: 25%;*/
+    /*}*/
     #left_box ul {
         padding-left: 148px;
     }

@@ -38,7 +38,6 @@ function validate_email() {
             return false;
         }
     }
-
 }
 
 let phoneFormat = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/;
@@ -135,8 +134,6 @@ function validate_resume() {
     }
 }
 
-
-
 function checkForm() {
     let validate = true;
     if ( !validate_fio() ) 		validate = false;
@@ -207,50 +204,18 @@ jQuery(document).ready(function() {
     document.getElementById('resume').addEventListener( 'blur', function(){
         validate_resume();
     });
-    //
-    // jQuery('.form').submit(function (event) {
-    //     event.preventDefault();
-    //     if (checkForm()){
-    //         var fd = new FormData(this);
-    //         var files = jQuery('input[type=file]')[0].files[0];
-    //         fd.append('file',files);
-    //         jQuery.ajax({
-    //             url:     jQuery(this).data('ajaxUrl'),
-    //             type:     "POST",
-    //             processData: false,
-    //             cache: false,
-    //             contentType: false,
-    //             dataType: 'json',
-    //             data: {
-    //                 action : 'save_custom_post',
-    //                 form_data: fd,
-    //             },
-    //             success: function(response) { //Данные отправлены успешно
-    //                 if (response !== '') {alert(response);}
-    //             },
-    //             error: function(response) { // Данные не отправлены
-    //                 alert('error');
-    //             }
-    //         });
-    //     }else {
-    //         return;
-    //     }
-    //
-    // });
     jQuery('.form').submit(function (event) {
         event.preventDefault();
         if (checkForm()){
             var fd = new FormData(this);
-            var files = jQuery('input[type=file]')[0].files[0];
             fd.append('action','save_custom_post');
             console.log(fd);
             jQuery.ajax( {
                 url: ajaxurl,
                 type:     "POST",
-                 processData: false,
+                processData: false,
                 cache: false,
-                 contentType: false,
-                // dataType: 'json',
+                contentType: false,
                 data : fd
             })
             .done(function (response) {//Данные отправлены успешно

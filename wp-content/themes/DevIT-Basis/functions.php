@@ -3,15 +3,16 @@ include('settings.php');
 include('Contact_form.php');
 add_theme_support('post-thumbnails');
 
+// include Mailgun for send message
+require 'vendor/autoload.php';
+use Mailgun\Mailgun;
+
 
 function registerStyles()
 {
-//    wp_register_style ('main_style', get_stylesheet_directory_uri() . '/src/css/main.css', array(), '1.0.0');
-//    wp_enqueue_style('main_style');
     wp_enqueue_style('icons_style', 'https://use.fontawesome.com/releases/v5.9.0/css/all.css', array(), '1.1.0');
     wp_enqueue_style('icons_style', 'https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css', array(), '1.1.0');
     wp_enqueue_style('main_style', get_stylesheet_directory_uri() . '/src/css/main.css', array(), '1.0.0');
-//    wp_enqueue_style('jquery_ui_style', get_stylesheet_directory_uri() . '/assets/css/jquery-ui.css', array(), '1.1.0');
 }
 add_action('wp_enqueue_scripts', 'registerStyles');
 
@@ -21,7 +22,6 @@ function enqueue_scripts()
 
     wp_enqueue_script('theme_scripts', get_stylesheet_directory_uri() . '/src/js/script.js', array('jquery'), '1.1.0', true);
     wp_enqueue_script('jquery_ui_scripts', get_stylesheet_directory_uri() . '/src/js/jquery-ui.js', array('jquery'), '1.1.0', true);
-//    wp_enqueue_script('bootstrap_scripts', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '3.3.7', true);
 
 }
 
@@ -33,7 +33,7 @@ register_nav_menus(array(
     'footer' => 'Footer menu'
 ));
 
-//create function show contact form
+//create function show contact form for shortcode
 function show_form (){
     $src = get_stylesheet_directory_uri() . '/images/upload.png';
     $form = '<form class="form" action="" method="post" enctype = "multipart/form-data" data-ajax-url="' . admin_url('admin-ajax.php') . '" >
@@ -96,8 +96,8 @@ function create_custom_post_type() {
     register_post_type ('devit_contact_form', array(
         'label'  => null,
         'labels' => array(
-            'name'               => __('Devit contact forms'), // основное название для типа записи
-            'singular_name'      => __('devit_contact_form'), // название для одной записи этого типа
+            'name'               => 'Devit contact forms', // основное название для типа записи
+            'singular_name'      => 'devit_contact_form', // название для одной записи этого типа
             'add_new'            => 'Add', // для добавления новой записи
             'add_new_item'       => 'Add new devit_contact_form', // заголовка у вновь создаваемой записи в админ-панели.
             'edit_item'          => 'Edit devit_contact_form', // для редактирования типа записи
@@ -142,7 +142,7 @@ function contact_user_data_boxes($post) {
     add_meta_box('age', 'Age', 'user_age_meta', 'devit_contact_form', 'normal', 'default');
     add_meta_box('resume', 'Resume', 'user_resume_meta', 'devit_contact_form', 'normal', 'default');
 }
-
+// function edit html meta box
 function user_fio_meta() {
     global $post;
 
@@ -403,6 +403,7 @@ function save_devit_post_type() {
     else {
         $file = $upload_dir['basedir'] . '/' . $filename;
     }
+    // move file from temporary dir to created dir
     move_uploaded_file($image_url, $file);
     $wp_filetype = wp_check_filetype( $filename, null );
     $attachment = array(
@@ -429,12 +430,37 @@ function save_devit_post_type() {
             ),
     );
 
-// Save data to database
+    // Save data to database
     $post_id = wp_insert_post( wp_slash($post_data) );
 
-// Connect custom post type with attach_id
+    // Connect custom post type with attach_id
     set_post_thumbnail($post_id, $attach_id);
 
-    wp_die();
+
+
+    // Instantiate the client
+    $mgClient = new Mailgun('6260bbad5306a21de1c887bafb002e3e-19f318b0-49151fcc');
+    $domain = "sandboxd13dc54904624cc09780251581f72f8b.mailgun.org";
+
+    $userName = $_POST['fio'];
+    // enabling output buffer
+    ob_start();
+    // include templates our message
+    include( 'templates/message.php' );
+    // get output buffer contents
+    $html = ob_get_contents();
+    // Clear (erase) the output buffer and disable output buffering
+    ob_end_clean();
+
+
+    // Make the call to the client.
+    $result = $mgClient->sendMessage($domain, array(
+        'from'	=> 'Excited User <mailgun@sandboxd13dc54904624cc09780251581f72f8b.mailgun.org>',
+        'to'	=> 'Baz <nina.yaremenko@devit-team.com>',
+        'subject' => "Пользователь $userName отправил(а) вам заявку",
+        'html'    => $html,
+    ));
+
+    return $success = "Ваша заявка отправленна успешно";
 }
 

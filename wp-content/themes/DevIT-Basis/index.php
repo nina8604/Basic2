@@ -1,4 +1,5 @@
 <?php
+
 get_header(); ?>
 
         <div class="main" style='background-image: url(" <?php echo get_stylesheet_directory_uri() . '/images/main.png';?> ")'>

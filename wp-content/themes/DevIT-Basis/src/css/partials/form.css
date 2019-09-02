@@ -4,6 +4,9 @@
     /*background-image: url("/nina-iaremenko-jsfw1-basis/stage5/images/main.png");*/
     background-repeat: no-repeat;
     background-size: cover;
+    box-sizing: border-box;
+    min-height: 100%;
+    padding-bottom: 350px;
 }
 form {
     margin: 0 auto;
