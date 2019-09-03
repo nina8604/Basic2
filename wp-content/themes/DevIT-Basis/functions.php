@@ -417,3 +417,11 @@ function save_devit_post_type() {
     return $success = "Ваша заявка отправленна успешно";
 }
 
+add_action( 'admin_bar_menu', 'custom_wp_toolbar_link', 999 );
+function custom_wp_toolbar_link( $wp_admin_bar ) {
+    global $wp_version;
+    $args = array( 'title' => 'WP v.' . $wp_version, 'id' => 'wp-ver');
+    $args2 = array( 'title' => 'PHP v.' . phpversion(), 'id' => 'php-ver');
+    $wp_admin_bar->add_node($args);
+    $wp_admin_bar->add_node($args2);
+}
