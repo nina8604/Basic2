@@ -1,4 +1,4 @@
-
+"use strict";
 let error = "данные введены не верною. Повторите попытку.";
 let errorEmpty = "* данное поле обязательно для заполнения.";
 function validate_fio() {
@@ -148,62 +148,85 @@ function checkForm() {
 
 jQuery(document).ready(function() {
     let count = 1;
-    // create new fields for extra phones
-    plus.addEventListener("click", function(){
-        let input = document.createElement('INPUT');
-        input.type = 'text';
-        input.className = 'phones';
-        input.id = "phone" + count;
-        input.setAttribute('data-validate', '0');
-        input.name = "phone[]";
-        let span = document.createElement('SPAN');
-        span.className = 'error';
-        let pre = document.createElement('PRE');
-        let deleteBtn = document.createElement('INPUT');
-        deleteBtn.type = 'button';
-        deleteBtn.setAttribute("class", "delete_extra_phone");
-        deleteBtn.value = 'Удалить';
+    // create new fields for extra phones\
+    let plus = document.getElementById("plus");
+    if (plus != null) {
+        plus.addEventListener("click", function(){
+            let input = document.createElement('INPUT');
+            input.type = 'text';
+            input.className = 'phones';
+            input.id = "phone" + count;
+            input.setAttribute('data-validate', '0');
+            input.name = "phone[]";
+            let span = document.createElement('SPAN');
+            span.className = 'error';
+            let pre = document.createElement('PRE');
+            let deleteBtn = document.createElement('INPUT');
+            deleteBtn.type = 'button';
+            deleteBtn.setAttribute("class", "delete_extra_phone");
+            deleteBtn.value = 'Удалить';
 
-        document.querySelector('#phone_container').appendChild(input);
-        document.querySelector('#phone_container').appendChild(span);
-        document.querySelector('#phone_container').appendChild(deleteBtn);
-        document.querySelector('#phone_container').appendChild(pre);
-        count++;
-        deleteBtn.addEventListener("click", function() {
-            this.previousElementSibling.remove();
-            this.previousElementSibling.remove();
-            this.nextElementSibling.remove();
-            this.remove();
+            document.querySelector('#phone_container').appendChild(input);
+            document.querySelector('#phone_container').appendChild(span);
+            document.querySelector('#phone_container').appendChild(deleteBtn);
+            document.querySelector('#phone_container').appendChild(pre);
+            count++;
+            deleteBtn.addEventListener("click", function() {
+                this.previousElementSibling.remove();
+                this.previousElementSibling.remove();
+                this.nextElementSibling.remove();
+                this.remove();
+            });
+
         });
+    }
 
-    });
+    let fio = document.getElementById('fio');
+    if (fio != null) {
+        fio.addEventListener( 'blur', function(){
+            validate_fio();
+        });
+    }
 
-    document.getElementById('fio').addEventListener( 'blur', function(){
-        validate_fio();
-    });
+    let email = document.getElementById('email');
+    if (email != null) {
+        email.addEventListener( 'blur', function(){
+            validate_email();
+        });
+    }
 
-    document.getElementById('email').addEventListener( 'blur', function(){
-        validate_email();
-    });
 
     let phone_container = document.getElementById('phone_container');
-    phone_container.addEventListener( 'focusout', function(event) {
-        if (event.target.className == 'phones') {
-            validate_phone(event.target);
-        }
-    });
+    if (phone_container != null) {
+        phone_container.addEventListener( 'focusout', function(event) {
+            if (event.target.className == 'phones') {
+                validate_phone(event.target);
+            }
+        });
+    }
 
-    document.getElementById('age').addEventListener( 'blur', function(){
-        validate_age();
-    });
+    let age = document.getElementById('age');
+    if (age != null) {
+        age.addEventListener( 'blur', function(){
+            validate_age();
+        });
+    }
 
-    document.getElementById('photo').addEventListener( 'change', function(){
-        validate_photo();
-    });
 
-    document.getElementById('resume').addEventListener( 'blur', function(){
-        validate_resume();
-    });
+    let photo = document.getElementById('photo');
+    if (photo != null) {
+        photo.addEventListener( 'change', function(){
+            validate_photo();
+        });
+    }
+
+    let resume = document.getElementById('resume');
+    if (resume != null) {
+        resume.addEventListener( 'blur', function(){
+            validate_resume();
+        });
+    }
+
     jQuery('.form').submit(function (event) {
         event.preventDefault();
         if (checkForm()){
@@ -228,4 +251,17 @@ jQuery(document).ready(function() {
             });
         }else return;
     });
+
+    //check page
+    if(jQuery('.page-id-192').length > 0) {
+        // add class devit-element for all elements on this page which has class elementor-element
+        jQuery('.elementor-element').addClass('devit-element');
+
+        // found all H - elements and for each elements add content 'DevIT - '
+        jQuery('h1, h2, h3').each(function(){
+            jQuery(this).html('DevIT - ' + jQuery(this).html());
+        });
+    }
 });
+
+
