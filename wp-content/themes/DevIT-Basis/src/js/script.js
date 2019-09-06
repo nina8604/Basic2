@@ -253,15 +253,16 @@ jQuery(document).ready(function() {
     });
 
     //check page
-    if(jQuery('.page-id-192').length > 0) {
-        // add class devit-element for all elements on this page which has class elementor-element
-        jQuery('.elementor-element').addClass('devit-element');
-
-        // found all H - elements and for each elements add content 'DevIT - '
-        jQuery('h1, h2, h3').each(function(){
-            jQuery(this).html('DevIT - ' + jQuery(this).html());
-        });
-    }
+    // if(jQuery('.page-id-192').length > 0) {
+    //     // add class devit-element for all elements on this page which has class elementor-element
+    //     jQuery('.elementor-element').addClass('devit-element');
+    //
+    //     // found all H - elements and for each elements add content 'DevIT - '
+    //     jQuery('h1, h2, h3').each(function(){
+    //         jQuery(this).html('DevIT - ' + jQuery(this).html());
+    //     });
+    // }
 });
+
 
 
