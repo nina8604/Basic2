@@ -429,50 +429,16 @@ function custom_wp_toolbar_link( $wp_admin_bar ) {
 // add class 'devit-element' to element has class - 'elementor-element'
 add_action('elementor/element/after_add_attributes', 'add_new_class', 10, 2);
 function add_new_class($element) {
-    $element->add_render_attribute( '_wrapper', 'class', 'devit-element' );
-}
-
-// add content 'DevIT - ' to H-elements
-//function add_content_title ($buffer) {
-//    $changes = [
-//        '<h1 .*>' => '<h1 .*>DevIT - ',
-//        '<h2 .*>' => '<h2 .*>DevIT - ',
-//        '<h3 .*>' => '<h3 .*>DevIT - ',
-//    ];
-//    var_dump(123456);
-//    foreach($changes as $found => $change){
-//        $content = str_ireplace($found, $change, $buffer);
-//    }
-//    return $content;
-//}
-
-add_action( 'elementor/widget/render_content', function( $content, $widget ) {
-    if ( 'heading' === $widget->get_name() ) {
-        $content = preg_replace('/(<h[1-6].*">)([\S\s]*)(<\/h[1-6]>)/', '${1}DevIT - ${2}${3}', $content);
+    if (get_the_ID() == 192) {
+        $element->add_render_attribute( '_wrapper', 'class', 'devit-element' );
     }
-
+}
+// add content to H-elements
+add_action( 'elementor/widget/render_content', function( $content, $widget ) {
+    if (get_the_ID() == 192) {
+        if ( 'heading' === $widget->get_name() || 'icon-box' === $widget->get_name()) {
+            $content = preg_replace('/(<h[1-6].*">)([\S\s]*)(<\/h[1-6]>)/', '${1}DevIT - ${2}${3}', $content);
+        }
+    }
     return $content;
 }, 10, 2 );
-
-//add_action( 'elementor/frontend/the_content', function( $content ) {
-////    var_dump($content);
-////    $changes = [
-////        '<h1 .*>' => '<h1 .*>DevIT - ',
-////        '<h2 .*>' => '<h2 .*>DevIT - ',
-////        '<h3 .*>' => '<h3 .*>DevIT - ',
-////    ];
-//
-////    $content = preg_replace('(<h[1-6].*">)([\S\s]*)(<\/h[1-6]>)', '${1}DevIT - ${2}${3}', $content);
-////    var_dump(123456);
-////    foreach($changes as $found => $change){
-////        $content = str_ireplace($found, $change, $content);
-////    }
-//    return $content;
-//} );
-
-//function the_content_filter ($content) {
-////    $content = str_ireplace(['<h1>', '<h2>', '<h3>'], []);
-//    $content = str_ireplace('<h1>', '<h1>DevIT -', $content);
-//    return $content;
-//
-//}
