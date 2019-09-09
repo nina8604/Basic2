@@ -43,55 +43,7 @@ register_nav_menus(array(
 
 //create function show contact form for shortcode
 function show_form (){
-    $src = get_stylesheet_directory_uri() . '/images/upload.png';
-    $form = '<form class="form" action="" method="post" enctype = "multipart/form-data" >
-            <fieldset>
-                <label for="fio">ФИО </label><br>
-                <input id="fio" type="text" name="fio" value="" >
-                <span class="error"> </span>
-                <br>
-                <label for="email">E-mail </label><br>
-                <input id="email" type="text" name="email" value="" >
-                <span class="error"> </span>
-                <br>
-                <div id="phone_container">
-                    <div class="form-group">
-                        <div class="form-control">
-                            <label for="phone0" >Телефон </label><br>
-                            <input id="phone0" name="phone[]" class="phones" type="text" data-validate="0" value="">
-                            <span class="error"> </span>
-                        </div>
-                        <div class="form-control">
-                            <input id="plus" type="button" name="plus" value="+"><br>
-                        </div>
-                    </div>
-                </div>
-
-                <label for="age">Возраст </label><br>
-                <input id="age" type="text" name="age" value="">
-                <span class="error"> </span>
-                <br>
-                <div id="foto_container">
-                    <span>Фотография </span><br>
-                    <label for="photo">
-                        <div id="label-photo-box">
-                            <img src="'.$src.'" alt="Upload foto">
-                        </div>
-
-                    </label>
-                    <input id="photo" type="file" name="photo" />
-                    <span class="error"> </span>
-                </div>
-                <span class="error"> </span>
-                <div id="resume_box">
-                    <label for="resume">Резюме </label><br>
-                    <textarea id="resume" name="resume" ></textarea>
-                    <span class="error"> </span>
-                    <br><br>
-                </div>
-                <input id="submit" type="submit" name="uploadBtn" value="Отправить" />
-            </fieldset>
-            </form>';
+    $form = get_template_part( '/templates/Devit_form' );
     return $form;
 }
 
@@ -131,7 +83,7 @@ function create_custom_post_type() {
         //'capabilities'      => 'post', // массив дополнительных прав для этого типа записи
         //'map_meta_cap'      => null, // Ставим true чтобы включить дефолтный обработчик специальных прав
         'hierarchical'        => false,
-        'supports'            => array('title', 'thumbnail'), // 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
+        'supports'            => array('title', 'editor', 'thumbnail'), // 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
         'register_meta_box_cb' => 'contact_user_data_boxes', // custom meta box
         'taxonomies'          => [],
         'has_archive'         => true,
@@ -147,65 +99,50 @@ function contact_user_data_boxes($post) {
     add_meta_box('email', 'Email', 'user_email_meta', 'devit_contact_form', 'normal', 'high');
     add_meta_box('phone', 'Phones', 'user_phone_meta', 'devit_contact_form', 'normal', 'high');
     add_meta_box('age', 'Age', 'user_age_meta', 'devit_contact_form', 'normal', 'high');
-    add_meta_box('resume', 'Resume', 'user_resume_meta', 'devit_contact_form', 'normal', 'high');
 }
 function user_email_meta() {
     global $post;
 
-    wp_nonce_field( basename( __FILE__ ), 'devit_contact_form_fields' );
+    wp_nonce_field( basename( __FILE__ ), 'email_fields' );
 
     //Get the contact data if it is already written
     $email = get_post_meta($post->ID, 'email', true);
 
     //Output the field
 
-    echo '<input type = "text" name="email" value="' .
-        $email . '" class = "email" ';
+    echo '<div class=""><input type = "text" name="email" value="' .
+        $email . '" class = "email" /></div>';
 }
 function user_phone_meta() {
     global $post;
 
-    wp_nonce_field( basename( __FILE__ ), 'devit_contact_form_fields' );
+    wp_nonce_field( basename( __FILE__ ), 'phone_fields' );
 
     //Get the contact data if it is already written
     $phone = get_post_meta($post->ID, 'phone', true);
 
     //Output the field
 
-    echo '<input type = "text" name="phone" value="' .
-        $phone . '" class = "phone" ';
+    echo '<div><input type = "text" name="phone" value="' .
+        $phone . '" class = "phone" /></div>';
 }
 function user_age_meta() {
     global $post;
 
-    wp_nonce_field( basename( __FILE__ ), 'devit_contact_form_fields' );
+    wp_nonce_field( basename( __FILE__ ), 'age_fields' );
 
     //Get the contact data if it is already written
     $age = get_post_meta($post->ID, 'age', true);
 
     //Output the field
 
-    echo '<input type = "text" name="age" value="' .
-        $age . '" class = "age" ';
+    echo '<div><input type = "text" name="age" value="' .
+        $age . '" class = "age" /></div>';
 }
-function user_resume_meta() {
-    global $post;
-
-    wp_nonce_field( basename( __FILE__ ), 'devit_contact_form_fields' );
-
-    //Get the contact data if it is already written
-    $resume = get_post_meta($post->ID, 'resume', true);
-
-    //Output the field
-
-    echo '<textarea type="textarea" name="resume" class = "resume">'.$resume.'</textarea>';
-}
-
 // Action hook to save the post meta data
 add_action('save_post', 'save_contact_user_email_meta', 1, 3);
 add_action('save_post', 'save_contact_user_phone_meta', 1, 5);
 add_action('save_post', 'save_contact_user_age_meta', 1, 7);
-add_action('save_post', 'save_contact_user_resume_meta', 1, 9);
 
 
 function save_contact_user_email_meta($post_id, $post) {
@@ -217,7 +154,7 @@ function save_contact_user_email_meta($post_id, $post) {
 
     // Verify this came from the our screen and with proper authorization,
     // because save_post can be triggered at other times.
-    if ( ! isset( $_POST['email'] ) || ! wp_verify_nonce( $_POST['devit_contact_form_fields'], basename(__FILE__) ) ) {
+    if ( ! isset( $_POST['email'] ) || ! wp_verify_nonce( $_POST['email_fields'], basename(__FILE__) ) ) {
         return $post_id;
     }
 
@@ -249,7 +186,7 @@ function save_contact_user_phone_meta($post_id, $post) {
 
     // Verify this came from the our screen and with proper authorization,
     // because save_post can be triggered at other times.
-    if ( ! isset( $_POST['phone'] ) || ! wp_verify_nonce( $_POST['devit_contact_form_fields'], basename(__FILE__) ) ) {
+    if ( ! isset( $_POST['phone'] ) || ! wp_verify_nonce( $_POST['phone_fields'], basename(__FILE__) ) ) {
         return $post_id;
     }
 
@@ -281,44 +218,12 @@ function save_contact_user_age_meta($post_id, $post) {
 
     // Verify this came from the our screen and with proper authorization,
     // because save_post can be triggered at other times.
-    if ( ! isset( $_POST['age'] ) || ! wp_verify_nonce( $_POST['devit_contact_form_fields'], basename(__FILE__) ) ) {
+    if ( ! isset( $_POST['age'] ) || ! wp_verify_nonce( $_POST['age_fields'], basename(__FILE__) ) ) {
         return $post_id;
     }
 
     //Add values to custom fields
     $devit_contact_form_meta['age'] = $_POST['age'];
-
-    //Add values to custom fields
-    foreach ($devit_contact_form_meta as $key => $value) {
-        if ($post->post_type == "revision")
-            return;
-        $value = implode(',', (array) $value);
-
-        if (get_post_meta($post->ID, $key, FALSE)) {
-            update_post_meta($post->ID, $key, $value);
-        } else {
-            add_post_meta($post->ID, $key, $value);
-        }
-        if (!$value) {
-            delete_post_meta($post->ID, $key);
-        }
-    }
-}
-function save_contact_user_resume_meta($post_id, $post) {
-
-    //Check if the current user can edit the post
-    if (!current_user_can('edit_post', $post->ID)) {
-        return $post_id;
-    }
-
-    // Verify this came from the our screen and with proper authorization,
-    // because save_post can be triggered at other times.
-    if ( ! isset( $_POST['resume'] ) || ! wp_verify_nonce( $_POST['devit_contact_form_fields'], basename(__FILE__) ) ) {
-        return $post_id;
-    }
-
-    //Add values to custom fields
-    $devit_contact_form_meta['resume'] = $_POST['resume'];
 
     //Add values to custom fields
     foreach ($devit_contact_form_meta as $key => $value) {
@@ -371,15 +276,13 @@ function save_devit_post_type() {
 
     $post_data = array(
         'post_title' => $_POST['fio'],
+        'post_content' => $_POST['resume'],
         'post_type' => 'devit_contact_form',
         'post_status' => 'private',
         'meta_input' => array(
-//            'fio' => $_POST['fio'],
-            'excerpt' => $_POST['resume'],
             'email' => $_POST['email'],
             'phone' => implode(', ', $_POST['phone']),
             'age' => $_POST['age'],
-//            'resume' => $_POST['resume'],
             ),
     );
 
@@ -415,15 +318,6 @@ function save_devit_post_type() {
     ));
 
     return $success = "Ваша заявка отправленна успешно";
-}
-
-add_action( 'admin_bar_menu', 'custom_wp_toolbar_link', 999 );
-function custom_wp_toolbar_link( $wp_admin_bar ) {
-    global $wp_version;
-    $args = array( 'title' => 'WP v.' . $wp_version, 'id' => 'wp-ver');
-    $args2 = array( 'title' => 'PHP v.' . phpversion(), 'id' => 'php-ver');
-    $wp_admin_bar->add_node($args);
-    $wp_admin_bar->add_node($args2);
 }
 
 // add class 'devit-element' to element has class - 'elementor-element'
